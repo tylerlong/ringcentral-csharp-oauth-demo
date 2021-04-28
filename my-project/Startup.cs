@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using RingCentral;
 using Newtonsoft.Json;
+using RingCentral.Net.AuthorizeUri;
 
 namespace my_project
 {
@@ -34,6 +35,8 @@ namespace my_project
             app.Run(async (context) =>
             {
                 var rc = new RestClient(RINGCENTRAL_CLIENT_ID, RINGCENTRAL_CLIENT_SECRET, RINGCENTRAL_SERVER_URL);
+                var oauthExtension = new AuthorizeUriExtension();
+                await rc.InstallExtension(oauthExtension);
                 var tokenString = context.Session.GetString(SESSION_TOKEN_KEY);
                 if (tokenString != null)
                 {
@@ -41,7 +44,11 @@ namespace my_project
                 }
                 else if (context.Request.Path != "/oauth2callback")
                 {
-                    var oauthUri = rc.AuthorizeUri(RINGCENTRAL_REDIRECT_URL);
+                    var oauthUri = oauthExtension.BuildUri(
+                        new AuthorizeRequest()
+                        {
+                            redirect_uri = RINGCENTRAL_REDIRECT_URL,
+                        });
                     await context.Response.WriteAsync(
                         Html($"<a href=\"{oauthUri}\">Click here to authorize</a>"));
                     return;
