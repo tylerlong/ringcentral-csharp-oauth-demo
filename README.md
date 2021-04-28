@@ -1,1 +1,7 @@
-[This project] is for this tutorial: https://github.com/tylerlong/ringcentral-api-docs/blob/master/docs/authentication/quick-start/authorization-flow/c-sharp.md
+# RingCentral OAuth Demo for C#
+
+Update your RingCentral app and set redirect URI to http://localhost:5000/oauth2callback.
+
+Edit `Startup.cs` and specify `RINGCENTRAL_CLIENT_ID` and `RINGCENTRAL_CLIENT_SECRET`.
+
+Run the app and navigate to http://localhost:5000
